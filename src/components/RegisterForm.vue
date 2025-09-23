@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import TextInput from '@/components/shared/TextInput.vue'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
@@ -16,9 +16,13 @@ const { isLoading } = storeToRefs(auth)
 const { register } = auth
 
 const isDisabled = computed(() => {
-  if (!form.value.email || !form.value.password || !form.value.name || !form.value.does_agree) {
-    return true
-  } else return false
+  return (
+    !form.value.email ||
+    !form.value.password ||
+    !form.value.name ||
+    !form.value.does_agree ||
+    Object.keys(error.value).length > 0
+  )
 })
 
 const error = ref<Record<string, string>>({})
@@ -49,10 +53,15 @@ const validateForm = () => {
 }
 
 const handleRegister = () => {
-  console.log('handleRegister called')
-  if (!validateForm() && !isDisabled.value) return
+  if (!validateForm()) {
+    return
+  }
   register(form.value)
 }
+
+watch(form.value, () => {
+  validateForm()
+})
 </script>
 
 <template>

@@ -3,7 +3,7 @@ import TextInput from '@/components/shared/TextInput.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const router = useRouter()
 
@@ -20,9 +20,7 @@ const { isLoading } = storeToRefs(auth)
 const { login } = auth
 
 const isDisabled = computed(() => {
-  if (!form.value.email || !form.value.password) {
-    return true
-  } else return false
+  return !form.value.email || !form.value.password || Object.keys(error.value).length > 0
 })
 
 const validateForm = () => {
@@ -45,11 +43,17 @@ const validateForm = () => {
 }
 
 const handleLogin = () => {
-  if (!validateForm()) return
+  if (!validateForm()) {
+    return
+  }
   login(form.value).then(() => {
     router.push('/')
   })
 }
+
+watch(form.value, () => {
+  validateForm()
+})
 </script>
 
 <template>
