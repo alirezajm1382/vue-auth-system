@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useAlert } from './alert'
 
@@ -12,6 +12,10 @@ export const useAuthStore = defineStore('authentication-store', () => {
   const user = ref<User | undefined>(
     JSON.parse(localStorage.getItem('session') || 'null') || undefined,
   )
+  const isLoggedIn = computed(() => {
+    if (user.value) return true
+    else return false
+  })
   const isLoading = ref(false)
 
   const alertStore = useAlert()
@@ -51,11 +55,11 @@ export const useAuthStore = defineStore('authentication-store', () => {
     return false
   }
 
-  function logout() {
+  async function logout() {
     user.value = undefined
     localStorage.removeItem('session')
     fireAlert({ title: 'Logged out!', type: 'info' })
   }
 
-  return { user, isLoading, login, register, logout }
+  return { user, isLoading, isLoggedIn, login, register, logout }
 })

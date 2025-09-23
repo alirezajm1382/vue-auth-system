@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
-import { watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
 const auth = useAuthStore()
 
-watch(auth, () => {
-  if (!auth.user) router.push('/auth/login')
-})
-
-const handleLogout = () => auth.logout()
+const handleLogout = () =>
+  auth.logout().then(() => {
+    setTimeout(() => {
+      router.push('/auth')
+    }, 2000)
+  })
 </script>
 <template>
   <div v-if="auth.user">
