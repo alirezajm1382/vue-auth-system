@@ -21,7 +21,7 @@ export default {
           neutral: '#33394F',
           'base-100': '#202433',
           info: '#0074de',
-          success: '#00e437',
+          success: '#78c28a',
           warning: '#ff9300',
           error: '#ff728d',
         },
