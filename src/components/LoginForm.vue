@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import TextInput from '@/components/shared/TextInput.vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+
+const router = useRouter()
 
 const form = ref({
   email: '',
@@ -9,6 +14,10 @@ const form = ref({
 })
 
 const error = ref<Record<string, string>>({})
+
+const auth = useAuthStore()
+const { isLoading } = storeToRefs(auth)
+const { login } = auth
 
 const isDisabled = computed(() => {
   if (!form.value.email || !form.value.password) {
@@ -37,7 +46,9 @@ const validateForm = () => {
 
 const handleLogin = () => {
   if (!validateForm()) return
-  console.log('Form Submitted! ', form.value)
+  login(form.value).then(() => {
+    router.push('/')
+  })
 }
 </script>
 
@@ -69,8 +80,14 @@ const handleLogin = () => {
       />
       <label for="" class="text-base font-semibold cursor-pointer">Remember me?</label>
     </div>
-    <button class="btn btn-primary w-full text-base h-[69px]" :disabled="isDisabled">
-      Sign In
+    <button
+      :class="{
+        'btn btn-primary w-full text-base h-[69px]': true,
+      }"
+      :disabled="isDisabled || isLoading"
+    >
+      Login
+      <span v-show="isLoading" class="loading loading-spinner"></span>
     </button>
   </form>
 </template>

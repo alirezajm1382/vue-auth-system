@@ -5,7 +5,7 @@ import AuthIntro from '@/components/AuthIntro.vue'
 <template>
   <div class="grid grid-cols-1 grid-rows-1 gap-0 md:grid-cols-2">
     <AuthIntro
-      class="hidden bg-gradient-to-br from-secondary to-primary md:flex m-[17px] rounded-[20px]"
+      class="hidden bg-gradient-to-br from-secondary to-primary md:flex m-[17px] rounded-[20px] -z-10"
     />
     <div class="flex justify-center items-center h-dvh">
       <RouterView class="m-10 w-full max-w-[440px]" />

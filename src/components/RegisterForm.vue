@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import TextInput from '@/components/shared/TextInput.vue'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
 const form = ref({
   name: '',
@@ -8,6 +10,10 @@ const form = ref({
   password: '',
   does_agree: false,
 })
+
+const auth = useAuthStore()
+const { isLoading } = storeToRefs(auth)
+const { register } = auth
 
 const isDisabled = computed(() => {
   if (!form.value.email || !form.value.password || !form.value.name || !form.value.does_agree) {
@@ -43,8 +49,9 @@ const validateForm = () => {
 }
 
 const handleRegister = () => {
+  console.log('handleRegister called')
   if (!validateForm() && !isDisabled.value) return
-  console.log('Form Submitted! ', form.value)
+  register(form.value)
 }
 </script>
 
@@ -83,8 +90,14 @@ const handleRegister = () => {
       >
     </div>
 
-    <button class="btn btn-primary w-full text-base h-[69px]" :disabled="isDisabled">
+    <button
+      :class="{
+        'btn btn-primary w-full text-base h-[69px]': true,
+      }"
+      :disabled="isDisabled || isLoading"
+    >
       Register
+      <span v-show="isLoading" class="loading loading-spinner"></span>
     </button>
   </form>
 </template>
