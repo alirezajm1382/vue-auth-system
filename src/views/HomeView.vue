@@ -13,7 +13,7 @@ watch(auth, () => {
 const handleLogout = () => auth.logout()
 </script>
 <template>
-  <div>
+  <div v-if="auth.user">
     <h1 class="text-xl">Hello, {{ auth.user?.name }}</h1>
     <button class="btn btn-error" @click="handleLogout">Log out</button>
   </div>
